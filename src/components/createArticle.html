@@ -1,0 +1,61 @@
+<sliderComponent style="height: 80px" texto=""></sliderComponent>
+  <div class="center">
+    <section id="content">
+      <h1 class="sub-header" v-if="!isEdit">Crear Artículo</h1>
+      <h1 class="sub-header" v-else>Editar Artículo</h1>
+      <form class="big-form" @submit.prevent="save">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input
+            type="text"
+            name="title"
+            v-model="article.title"
+            @input="submitted = false"
+          />
+
+          <div
+            class="errorForm"
+            v-if="submitted && v$.article.title.required.$invalid"
+          >
+            El título debe tener algo
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="content">Contenido:</label>
+          <textarea
+            name="content"
+            v-model="article.content"
+            @input="submitted = false"
+          ></textarea>
+
+          <div
+            class="errorForm"
+            v-if="submitted && v$.article.content.required.$invalid"
+          >
+            El contenido debe tener algo
+          </div>
+        </div>
+        <div class="form-group">
+          <div v-if="isEdit && article.image">
+            <img
+            :src="url + 'get-image/' + article.image"
+            :alt="article.title"
+            class="image-small"
+          />
+          </div>
+          <label for="file0">Imagen: (Opcional)</label>
+          <input
+            type="file"
+            name="file0"
+            id="file"
+            ref="file"
+            @change="fileChange"
+          />
+        </div>
+
+        <input class="btn btnArticle" type="submit" value="Guardar" />
+      </form>
+    </section>
+    <sideBarComponent></sideBarComponent>
+  </div>
+  
