@@ -7,7 +7,7 @@
             <!--LOGO -->
             <img src="..\assets\images\logo.png" class="appLogo" alt="Logotipo"/>
             <span id="brand">
-                <strong>Master</strong>VueJS
+                <strong>Blog</strong>VueJS
             </span>
         </div>
         
