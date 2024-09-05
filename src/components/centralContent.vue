@@ -1,6 +1,6 @@
 <template>
     <sliderComponent 
-        texto="Bienvenido al curso de VueJS con Victor Robles de victorroblesweb.com"
+        texto="Bienvenido al blog de Miguel Angel con VueJs"
         showBtn="true"
     ></sliderComponent>
 

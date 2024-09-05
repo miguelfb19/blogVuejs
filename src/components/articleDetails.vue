@@ -57,6 +57,8 @@ export default {
 
   mounted() {
     let articleID = this.$route.params.id;
+    console.log(articleID);
+    
     this.getArticle(articleID);
   },
 
