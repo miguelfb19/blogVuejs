@@ -32,7 +32,8 @@ export default {
     };
   },
   methods: {
-    goSearch() {
+    goSearch(event) {
+      event.preventDefault()
       this.$router.push("/buscador/" + this.searchStr);
         this.searchStr = null;
     },

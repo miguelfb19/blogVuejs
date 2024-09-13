@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
 import axios from "axios";
 import Global from "../Global";
 import sideBarComponent from "./sideBar.vue";
@@ -38,18 +39,42 @@ export default {
   },
 
   mounted() {
-    this.searchString = this.$route.params.searchString;
+    this.searchString = this.$route.params.searchString
     this.getArticlesBySearch(this.searchString);
   },
 
+  watch: {
+    // Observa los cambios en $route.params para detectar cambios en la ruta
+    '$route.params.searchString': {
+      immediate: true,
+      handler(newSearchString) {
+        this.searchString = newSearchString;
+        this.getArticlesBySearch(this.searchString);  // Ejecuta la búsqueda cuando cambie searchString
+      }
+    }
+  },
+
   methods: {
-    getArticlesBySearch(searchStr) {
-      axios.get(this.url + "search/" + searchStr).then((res) => {
-        if (res.data.status == "success") {
-          this.articles = res.data.articles;
-          console.log(this.articles);
+
+    async getArticlesBySearch(searchStr) { 
+      try {
+        const art = await axios.get(this.url + "search/" + searchStr)
+        if(art.data.status == "success"){
+          this.articles= art.data.articles
         }
-      });
+      } catch (error) {
+        swal.fire({
+          title: "Bienvenido!",
+          text: "Error al obtener busqueda del servidor",
+          icon: "error",
+          confirmButtonText: "Cerrar",
+          confirmButtonColor: "red",
+        });
+        throw new Error("Error 500:", error);
+        
+      }
+
+      nextTick()
     },
   },
 };
