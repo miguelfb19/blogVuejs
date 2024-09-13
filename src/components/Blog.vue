@@ -38,13 +38,24 @@ export default {
   },
 
   methods: {
-    getArticles() {
-      axios.get(this.url + "articles").then((res) => {
-        if (res.data.status == "success") {
-          this.articles = res.data.articles;
-          console.log(this.articles);
+    async getArticles() {
+
+      try {
+        const art = await axios.get(this.url + "articles")
+        if(art.data.status == "success"){
+          this.articles= art.data.articles
         }
-      });
+      } catch (error) {
+        swal.fire({
+          title: "Bienvenido!",
+          text: "Error al obtener articulos del servidor",
+          icon: "error",
+          confirmButtonText: "Cerrar",
+          confirmButtonColor: "red",
+        });
+        throw new Error("Error 500:", error);
+        
+      }
     },
   },
 };

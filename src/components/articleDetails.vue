@@ -57,51 +57,56 @@ export default {
 
   mounted() {
     let articleID = this.$route.params.id;
-    console.log(articleID);
-    
+
     this.getArticle(articleID);
   },
 
   methods: {
-    getArticle(id) {
-      axios
-        .get(this.url + "article/" + id)
-        .then((res) => {
-          if (res.data.status.toLowerCase() == "success" && res.data.article) {
-            this.article = res.data.article;
-          } else {
-            alert("Error al obtener el artículo desde la API.");
-            console.error("Error al obtener el artículo desde la API.");
-          }
-        })
-        .catch((error) => {
-          alert("Error en la solicitud HTTP:", error);
-          console.error("Error en la solicitud HTTP:", error);
+
+    async getArticle(id) {
+      try {
+        const art = await axios.get(this.url + "article/" + id);
+        if (art.data.status.toLowerCase() == "success" && art.data.article) {
+          this.article = art.data.article;
+        } else {
+          alert("Error al obtener el artículo desde la API.");
+        }
+      } catch (error) {
+        swal.fire({
+          title: "Bienvenido!",
+          text: "Error al obtener datos del servidor",
+          icon: "error",
+          confirmButtonText: "Cerrar",
+          confirmButtonColor: "red",
         });
+        throw new Error("Error 500:", error);
+      }
     },
     deleteArticle(id) {
-      swal.fire({
-        title: "¿Seguro que deseas borrar el artículo?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, Borrar",
-        cancelButtonText:'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.delete(`${this.url}article/${id}`).then(() => {
-            swal.fire(
-              "Artículo borrado",
-              "El Articulo fue eliminado exitosamente ",
-              "success"
-            );
-            setTimeout(() => {
-              this.$router.push("/blog");
-            }, 1000);
-          });
-        }
-      });
+      swal
+        .fire({
+          title: "¿Seguro que deseas borrar el artículo?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, Borrar",
+          cancelButtonText: "Cancelar",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            axios.delete(`${this.url}article/${id}`).then(() => {
+              swal.fire(
+                "Artículo borrado",
+                "El Articulo fue eliminado exitosamente ",
+                "success"
+              );
+              setTimeout(() => {
+                this.$router.push("/blog");
+              }, 1000);
+            });
+          }
+        });
     },
   },
 };
