@@ -27,4 +27,4 @@ export default {
 
 <style>
 @import "./assets/css/styles.css";
-</style>./components/alertComponent.vue
+</style>
