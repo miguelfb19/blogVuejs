@@ -6,6 +6,10 @@
       <div id="articles" v-if="articles">
         <ArticlesComponent :articles="articles"></ArticlesComponent>
       </div>
+      <div v-if="articles == null">
+        <div className="spinner"></div>
+        <h2 className="loadingText">Cargando...</h2>
+      </div>
     </section>
     <sideBarComponent></sideBarComponent>
   </div>
@@ -16,14 +20,13 @@ import axios from "axios";
 import Global from "../Global";
 import sideBarComponent from "./sideBar.vue";
 import sliderComponent from "./slider.vue";
-import ArticlesComponent from '@/components/Articles.vue';
-
+import ArticlesComponent from "@/components/Articles.vue";
 
 export default {
   name: "blogComponent",
   data() {
     return {
-      articles: [],
+      articles: null,
       url: Global.url,
     };
   },
@@ -39,11 +42,10 @@ export default {
 
   methods: {
     async getArticles() {
-
       try {
-        const art = await axios.get(this.url + "articles")
-        if(art.data.status == "success"){
-          this.articles= art.data.articles
+        const art = await axios.get(this.url + "articles");
+        if (art.data.status == "success") {
+          this.articles = art.data.articles;
         }
       } catch (error) {
         swal.fire({
@@ -54,7 +56,6 @@ export default {
           confirmButtonColor: "red",
         });
         throw new Error("Error 500:", error);
-        
       }
     },
   },

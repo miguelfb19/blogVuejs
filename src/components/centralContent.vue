@@ -1,38 +1,41 @@
 <template>
-    <sliderComponent 
-        texto="Bienvenido al blog de Miguel Angel con VueJs"
-        showBtn="true"
-    ></sliderComponent>
+  <sliderComponent
+    texto="Bienvenido al blog de Miguel Angel con VueJs"
+    showBtn="true"
+  ></sliderComponent>
 
-    <div class="center">
-        <section id="content" v-if="articles && articles.length >=1">
-            <h2 class="sub-header">Ultimos artículos</h2>
-
-            <div id="articles">
-                <ArticlesComponent :articles="articles"></ArticlesComponent>
-            </div>
-        </section>
-        <section v-else>
-            <h1>NO HAY ARTICULOS PARA MOSTRAR</h1>
-        </section>
-        <sideBarComponent></sideBarComponent>
-        <div class="clearfix"></div>
+  <div class="center">
+    <div v-if="articles == null">
+      <div className="spinner"></div>
+      <h2 className="loadingText">Cargando...</h2>
     </div>
+    <section id="content" v-if="articles && articles.length >= 1">
+      <h2 class="sub-header">Ultimos artículos</h2>
+
+      <div id="articles">
+        <ArticlesComponent :articles="articles"></ArticlesComponent>
+      </div>
+    </section>
+    <section v-if ="articles && articles.length == 0">
+      <h1>NO HAY ARTICULOS PARA MOSTRAR</h1>
+    </section>
+    <sideBarComponent></sideBarComponent>
+    <div class="clearfix"></div>
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Global from '@/Global'
-import sideBarComponent from '@/components/sideBar.vue'
-import sliderComponent from '@/components/slider.vue'
-import ArticlesComponent from '@/components/Articles.vue'
-
+import axios from "axios";
+import Global from "@/Global";
+import sideBarComponent from "@/components/sideBar.vue";
+import sliderComponent from "@/components/slider.vue";
+import ArticlesComponent from "@/components/Articles.vue";
 
 export default {
-    name: 'centralContent',
-    data() {
+  name: "centralContent",
+  data() {
     return {
-      articles: [],
+      articles: null,
       url: Global.url,
     };
   },
@@ -48,11 +51,10 @@ export default {
 
   methods: {
     async getLastArticles() {
-
       try {
-        const art = await axios.get(this.url + "articles/true")
-        if(art.data.status == "success"){
-          this.articles= art.data.articles
+        const art = await axios.get(this.url + "articles/true");
+        if (art.data.status == "success") {
+          this.articles = art.data.articles;
         }
       } catch (error) {
         swal.fire({
@@ -63,9 +65,8 @@ export default {
           confirmButtonColor: "red",
         });
         throw new Error("Error 500:", error);
-        
       }
     },
   },
-}
+};
 </script>
