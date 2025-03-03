@@ -2,13 +2,9 @@
   <sliderComponent v-if="article" :texto="article.title"></sliderComponent>
   <div class="center">
     <section id="content">
-      <article class="article-item article-detail" v-if="article">
+      <article class="article-detail" v-if="article">
         <div class="image-wrap">
-          <img
-            v-if="article.image"
-            :src="url + 'get-image/' + article.image"
-            :alt="article.title"
-          />
+          <img v-if="article.image" :src="articleImage" :alt="article.title" />
           <img
             v-else
             src="@/assets/images/sinImagen.jpg"
@@ -40,6 +36,7 @@ import Global from "../Global";
 import swal from "sweetalert2";
 import sideBarComponent from "@/components/sideBar.vue";
 import sliderComponent from "@/components/slider.vue";
+import { getImagesFromDS3 } from "@/services/get-images-from-s3.js";
 
 export default {
   name: "articleDetails",
@@ -52,6 +49,7 @@ export default {
       url: Global.url,
       article: null,
       moment: moment,
+      articleImage: "not-image",
     };
   },
 
@@ -62,12 +60,13 @@ export default {
   },
 
   methods: {
-
     async getArticle(id) {
       try {
-        const art = await axios.get(this.url + "article/" + id);
-        if (art.data.status.toLowerCase() == "success" && art.data.article) {
-          this.article = art.data.article;
+        const res = await axios.get(this.url + "article/" + id);
+        if (res.data.status.toLowerCase() == "success" && res.data.article) {
+          this.article = res.data.article;
+          const s3Response = await getImagesFromDS3(res.data.article.image);
+          this.articleImage = s3Response.fileUrl;
         } else {
           alert("Error al obtener el artículo desde la API.");
         }

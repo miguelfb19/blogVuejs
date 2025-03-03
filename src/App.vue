@@ -1,5 +1,5 @@
 <template>
-  <alertComponent></alertComponent>
+  <!-- <alertComponent></alertComponent> -->
   <headerComponent></headerComponent>
 
   <router-view></router-view>
@@ -12,7 +12,7 @@
 <script>
 import headerComponent from "./components/header.vue";
 import footerComponent from "./components/footerComponent.vue";
-import alertComponent from "./components/alertComponent.vue";
+// import alertComponent from "./components/alertComponent.vue";
 
 
 export default {
@@ -20,7 +20,7 @@ export default {
   components: {
     headerComponent,
     footerComponent,
-    alertComponent,
+    // alertComponent,
   },
 };
 </script>
